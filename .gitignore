@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+.next/
 /.pnp
 .pnp.*
 .yarn/*
@@ -9,7 +10,9 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
+better_manager/node_modules/
+better_manager/.next/
+better_manager/.env.local
 # testing
 /coverage
 
