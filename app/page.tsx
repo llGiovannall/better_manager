@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import useProgress from "../components/ui/useProgress";
 import LoadingDots from "../components/ui/loadingDots";
-import RegisterForm from "../components/registerForm";
+
 import { useRouter } from "next/navigation";
 
 
@@ -18,7 +18,7 @@ export default function Home() {
 
   React.useEffect(() => {
   if (progress === 100) {
-    router.push("/profile");
+    router.push("/register");
   }
 }, [progress]);
 
@@ -42,7 +42,7 @@ export default function Home() {
       />
     </Box>
     <LoadingDots />
-    <RegisterForm />
+
       
         <div className="flex flex-col items-center">
          
