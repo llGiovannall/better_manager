@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 export default function RegisterForm() {
   const [form, setForm] = useState({
-    name: "",
+    user: "",
     email: "",
     password: "",
   });
@@ -20,14 +20,20 @@ export default function RegisterForm() {
     });
     const data = await res.json();
     setMsg(data.message || data.error);
+    
+
+    if (res.status == 201) {
+      router.push("/profile");
+    }
   };
+const router = useRouter();
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img alt="work" src="work.jpg.jpg" className="mx-auto h-10 w-auto" />
+        <img alt="work" src="work.png.png" className="mx-auto h-10 w-auto" />
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
-          Sign in to your account
+          Register for an account
         </h2>
       </div>
 
@@ -37,9 +43,9 @@ export default function RegisterForm() {
             <label className="block text-sm/6 font-medium text-gray-100">Name</label>
             <div className="mt-2">
               <input
-                placeholder="Name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="Username"
+                value={form.user}
+                onChange={(e) => setForm({ ...form, user: e.target.value })}
                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
               />
             </div>
