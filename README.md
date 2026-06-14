@@ -1,5 +1,5 @@
 
-<img src=""C:\Users\gidim\Downloads\manager.jpeg.jpeg" width="100" style="border-radius: 50%"/>
+<img src="https://i.imgur.com/rDlzIYe.jpeg" width="200"/>
 # Better Manager
 
 Aplicação web de gerenciamento pessoal com autenticação, perfil customizável e quadro Kanban.
@@ -17,11 +17,12 @@ Aplicação web de gerenciamento pessoal com autenticação, perfil customizáve
 - [PostgreSQL](https://www.postgresql.org/) via [Neon](https://neon.tech/)
 - [hello-pangea/dnd](https://github.com/hello-pangea/dnd) — drag and drop
 - [MUI (Material UI)](https://mui.com/)
-- [styled-components](https://styled-components.com/)
+- [styled-components](https://styled-components.com/) 
 - [bcryptjs](https://www.npmjs.com/package/bcryptjs)
 - [shadcn.ui](https://ui.shadcn.com/)
 - [tailwind.css](https://tailwindcss.com/)
-- [![My Skills](https://skillicons.dev/icons?i=py,windicss,ts,postgrees,js&theme=light)](https://skillicons.dev)
+  
+ [![My Skills](https://skillicons.dev/icons?i=py,windicss,ts,postgres,js&theme=light)](https://skillicons.dev)
 
 
 
