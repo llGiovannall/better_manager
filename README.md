@@ -1,6 +1,6 @@
 
 <img src="https://i.imgur.com/rDlzIYe.jpeg" width="200"/>
-# Better Manager
+## Better Manager
 
 Aplicação web de gerenciamento pessoal com autenticação, perfil customizável e quadro Kanban.
 
