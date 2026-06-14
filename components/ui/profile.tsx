@@ -1,13 +1,54 @@
+
+"use client"
+
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { useState } from "react";
+import { Button } from "./button";
+import { useRouter } from "next/navigation";
+
+
+
 export default function Profile() {
+
+  const [showTabs, setShowTabs] = useState(false);
+
+const router = useRouter();
+
   return (
-    <section className="py-10 my-auto dark:bg-gray-900">
-      <div className="lg:w-[80%] md:w-[90%] w-[96%] mx-auto flex gap-4">
-        <div className="lg:w-[88%] sm:w-[88%] w-full mx-auto shadow-2xl p-4 rounded-xl h-fit self-center dark:bg-gray-800/40">
-          <div className="flex flex-col gap-4">
-            <h1 className="lg:text-3xl md:text-2xl text-xl font-serif font-extrabold mb-2 dark:text-white">
+
+
+ 
+        <section className="py-10 bg-white/10 rounded-xl">
+           <button style={{ backgroundColor: 'lightgray', alignSelf: 'flex-start', padding: '1px', color: 'black' }} onClick={() => setShowTabs(!showTabs)}>
+       +
+      </button>
+             {showTabs && (
+        <Tabs defaultValue="account" className="w-full sm:w-[300px] md:w-[500px] lg:w-[500px] mr-auto">
+    <TabsList variant="line" style={{backgroundColor: 'black'}} className="lg:w-[40%] h-9 border-gray-300 mb-4 flex-col h-fit">
+  <TabsTrigger value="account" className="w-full h-8">
+    Chat & Meeting
+  </TabsTrigger>
+  <TabsTrigger value="Workspace" className="w-full h-8" onClick={() => router.push("/workspace")}>
+    Workspace
+  </TabsTrigger>
+   <TabsTrigger value="Management" className="w-full h-8" >
+    Management
+  </TabsTrigger>
+</TabsList>
+</Tabs> )}
+          <div className="lg:w-[80%] md:w-[90%] w-[96%] mx-auto flex gap-4">
+            <div className="lg:w-[88%] sm:w-[88%] w-full bg-white p-20 rounded-xl h-fit self-center">
+              <div className="flex flex-col gap-4">
+                <h1 className="lg:text-3xl md:text-2xl text-xl font-serif font-extrabold mb-2 dark:text-black">
               Profile
             </h1>
-            <h2 className="text-grey text-sm mb-4 dark:text-gray-400">Create Profile</h2>
+
+                
+   
+
+
+            <h2 className="text-grey text-sm mb-4 dark:text-black">Create Profile</h2>
             <div>
               <div className="w-full rounded-sm bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw2fHxob21lfGVufDB8MHx8fDE3MTA0MDE1NDZ8MA&ixlib=rb-4.0.3&q=80&w=1080')] bg-cover bg-center bg-no-repeat items-center">
                 <div className="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full bg-[url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxwcm9maWxlfGVufDB8MHx8fDE3MTEwMDM0MjN8MA&ixlib=rb-4.0.3&q=80&w=1080')] bg-cover bg-center bg-no-repeat">
@@ -37,8 +78,8 @@ export default function Profile() {
               </div>
             </div>
 
-            <h2 className="text-center mt-1 font-semibold dark:text-gray-300">
-              Upload Profile and Cover Image
+            <h2 className="text-center mt-1 font-semibold dark:text-black">
+              Personal Information
             </h2>
 
             <div className="flex flex-col lg:flex-row gap-2 justify-center w-full">
@@ -67,12 +108,14 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="w-full rounded-lg bg-blue-500 mt-4 text-white text-lg font-semibold">
+            <div className="w-full rounded-lg bg-red-800 mt-4 text-white text-lg font-semibold">
               <button type="submit" className="w-full p-4">Save</button>
             </div>
           </div>
         </div>
       </div>
     </section>
+   
   );
+   
 }
