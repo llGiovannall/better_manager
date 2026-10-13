@@ -29,63 +29,38 @@ export default function RegisterForm() {
 const router = useRouter();
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img alt="work" src="work.png.png" className="mx-auto h-10 w-auto" />
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
-          Register for an account
-        </h2>
-      </div>
+   <main className="login-page">
+      <div className="login-decoration" aria-hidden="true" />
+      <header className="login-brand" aria-label="Better Manager">
+        <span className="login-brand-mark">B</span>
+        <span className="login-brand-name">BETTER MANAGER</span>
+      </header>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm/6 font-medium text-gray-100">Name</label>
-            <div className="mt-2">
-              <input
-                placeholder="Username"
-                value={form.user}
-                onChange={(e) => setForm({ ...form, user: e.target.value })}
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm/6 font-medium text-gray-100">Email</label>
-            <div className="mt-2">
-              <input
-                placeholder="Email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm/6 font-medium text-gray-100">Password</label>
-            <div className="mt-2">
-              <input
-                placeholder="Password"
-                type="password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-              />
-            </div>
-          </div>
-
-          <button
-            onClick={handleSubmit}
-            className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400"
-          >
-            Register
+      <section className="login-card" aria-labelledby="login-title">
+        <div className="login-symbol" aria-hidden="true">B</div>
+        <p className="login-eyebrow">ACESSO EXCLUSIVO</p>
+        <h1 id="login-title">Bem-vindo de volta.</h1>
+        <p className="login-subtitle">Entre para continuar sua jornada.</p>
+        <form className="login-form">
+          <label htmlFor="email">E-mail</label>
+          <input id="email" name="email" type="email" placeholder="seu@email.com" value={form.user}
+                onChange={(e) => setForm({ ...form, user: e.target.value })} />
+          <label htmlFor="password">Senha</label>
+          <input id="password" name="password" type="password" placeholder="Sua senha" value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <button type="submit" onClick={handleSubmit}>
+            ENTRAR
           </button>
+            {msg && <p>{msg}</p>}
+        </form>
+        <p className="login-register">Ainda não tem uma conta? <a href="#cadastro">Criar conta</a></p>
+      </section>
 
-          {msg && <p>{msg}</p>}
-        </div>
-      </div>
-    </div>
+      <footer className="login-footer"><span /> FEITO PARA AVANÇAR</footer>
+      <button className="floating-control" aria-label="Abrir menu">☷</button>
+    </main>
+            
+
+        
   );
 }
