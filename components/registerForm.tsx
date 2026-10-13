@@ -10,7 +10,8 @@ export default function RegisterForm() {
   });
   const [msg, setMsg] = useState("");
 
-  const handleSubmit = async () => {
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
     const res = await fetch("/api/register", {
       method: "POST",
       headers: {
@@ -41,14 +42,18 @@ const router = useRouter();
         <p className="login-eyebrow">ACESSO EXCLUSIVO</p>
         <h1 id="login-title">Bem-vindo de volta.</h1>
         <p className="login-subtitle">Entre para continuar sua jornada.</p>
-        <form className="login-form">
-          <label htmlFor="email">E-mail</label>
-          <input id="email" name="email" type="email" placeholder="seu@email.com" value={form.user}
+        <form className="login-form" onSubmit={handleSubmit}>
+            
+          <label htmlFor="user">Nome de usuário</label>
+          <input id="user" name="user" type="text" autoComplete="username" placeholder="Nome de usuário" value={form.user}
                 onChange={(e) => setForm({ ...form, user: e.target.value })} />
+          <label htmlFor="email">E-mail</label>
+          <input id="email" name="email" type="email" autoComplete="email" placeholder="seu@email.com" value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <label htmlFor="password">Senha</label>
-          <input id="password" name="password" type="password" placeholder="Sua senha" value={form.password}
+          <input id="password" name="password" type="password" autoComplete="password"  placeholder="Sua senha" value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })} />
-          <button type="submit" onClick={handleSubmit}>
+          <button type="submit">
             ENTRAR
           </button>
             {msg && <p>{msg}</p>}
