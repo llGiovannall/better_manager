@@ -1,6 +1,60 @@
-import KanbanBoard from "@/components/kanbanboard/KanbanBoard";
+"use client"
 
-export default function WorkspacePage() {
-    return (
-        <KanbanBoard />
-    );}
+import { useState } from "react"
+import { DragDropContext, Draggable, Droppable, type DropResult } from "@hello-pangea/dnd"
+import { Bell, ChevronDown, CircleHelp, Filter, LayoutGrid, ListTodo, MoreHorizontal, Plus, Search, Settings2, Sparkles, Target, Trash2, Users } from "lucide-react"
+
+type TaskData = { id: number; title: string; content: string; completed?: boolean; color?: string }
+type ColumnData = { id: string | number; title: string; tasks: TaskData[]; color?: string }
+
+const initialColumns: ColumnData[] = [{ id: "initial-column", title: "", tasks: [] }]
+
+function Task({ task, index, editTask, editTaskContent, deleteTask, columnId }: { task: TaskData; index: number; editTask: (id: number, title: string, columnId: string | number) => void; editTaskContent: (id: number, content: string, columnId: string | number) => void; deleteTask: (id: number, columnId: string | number) => void; columnId: string | number }) {
+  return <Draggable draggableId={String(task.id)} index={index}>
+    {(provided, snapshot) => <article ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={`group rounded-xl border p-3 shadow-sm transition ${snapshot.isDragging ? "border-[#b40000] bg-[#fff1ed] shadow-lg" : "border-[#eee5e1] bg-white hover:-translate-y-0.5 hover:border-[#dfc6bd]"}`}>
+      <div className="flex items-start gap-3">
+        <span className={`mt-1.5 size-2.5 shrink-0 rounded-full ${snapshot.isDragging ? "bg-[#b40000]" : "bg-[#ee8b78]"}`} />
+        <div className="min-w-0 flex-1">
+          <input aria-label="Título da tarefa" value={task.title} onChange={(event) => editTask(task.id, event.target.value, columnId)} placeholder="Nome da task..." className="w-full border-0 bg-transparent text-sm font-semibold outline-none placeholder:text-[#a89b97]" />
+          <input aria-label="Conteúdo da tarefa" value={task.content} onChange={(event) => editTaskContent(task.id, event.target.value, columnId)} placeholder="Conteúdo da task..." className="mt-2 w-full border-0 bg-transparent text-xs leading-5 text-[#8b7c78] outline-none placeholder:text-[#a89b97]" />
+        </div>
+        <button onClick={() => deleteTask(task.id, columnId)} aria-label={`Excluir ${task.title || "tarefa"}`} className="rounded-md p-1 text-[#b5a6a1] opacity-0 transition hover:bg-[#fff0ed] hover:text-[#b40000] group-hover:opacity-100"><Trash2 className="size-4" /></button>
+      </div>
+      <div className="mt-4 flex items-center justify-between pl-5"><span className="rounded-md bg-[#f8e9e5] px-2 py-1 text-[10px] font-semibold text-[#9b3d31]">Tarefa</span><span className="flex -space-x-1"><span className="flex size-5 items-center justify-center rounded-full border-2 border-white bg-[#f3b1a3] text-[8px] font-bold text-[#7d1b15]">G</span></span></div>
+    </article>}
+  </Draggable>
+}
+
+function Column({ column, editTask, addTask, editTaskContent, deleteTask, editColumnTitle }: { column: ColumnData; editTask: TaskData extends never ? never : (id: number, title: string, columnId: string | number) => void; addTask: (columnId: string | number, title: string, content: string) => void; editTaskContent: (id: number, content: string, columnId: string | number) => void; deleteTask: (id: number, columnId: string | number) => void; editColumnTitle: (id: string | number, title: string) => void }) {
+  const [showAdd, setShowAdd] = useState(false)
+  const [newTaskTitle, setNewTaskTitle] = useState("")
+  const [newTaskContent, setNewTaskContent] = useState("")
+  const [newColumnTitle, setNewColumnTitle] = useState(column.title)
+
+  function submitTask() {
+    addTask(column.id, newTaskTitle, newTaskContent)
+    setNewTaskTitle(""); setNewTaskContent(""); setShowAdd(false)
+  }
+
+  return <section className="flex min-h-[475px] w-[300px] shrink-0 flex-col overflow-hidden rounded-2xl border border-[#eadfdb] bg-white/70 shadow-[0_8px_30px_rgba(90,36,27,0.04)]">
+    <div className="sticky top-0 z-10 border-b border-[#eadfdb] bg-[#fffdfb] px-4 py-3"><div className="flex items-center justify-between"><div className="flex items-center gap-2"><span className="size-2.5 rounded-full bg-[#b40000]" /><span className="text-xs font-bold text-[#9b3d31]">{column.tasks.length} tarefas</span></div><button aria-label="Opções da coluna" className="text-[#9d908c]"><MoreHorizontal className="size-4" /></button></div><input value={newColumnTitle} onChange={(event) => setNewColumnTitle(event.target.value)} onBlur={() => editColumnTitle(column.id, newColumnTitle)} placeholder="Nome da coluna..." className="mt-2 w-full border-0 bg-transparent text-base font-bold outline-none placeholder:text-[#a89b97]" /></div>
+    <button onClick={() => setShowAdd((value) => !value)} className="mx-3 mt-3 flex items-center justify-center gap-2 rounded-xl border border-dashed border-[#dbcac4] py-2 text-xs font-semibold text-[#9a8882] transition hover:border-[#b40000] hover:text-[#b40000]"><Plus className="size-4" />Adicionar tarefa</button>
+    {showAdd && <div className="mx-3 mt-3 rounded-xl border border-[#eadfdb] bg-[#fffaf8] p-3"><input autoFocus value={newTaskTitle} onChange={(event) => setNewTaskTitle(event.target.value)} placeholder="Nome da task..." className="mb-2 w-full rounded-lg border border-[#eadfdb] bg-white px-2 py-2 text-xs outline-none focus:border-[#b40000]" /><input value={newTaskContent} onChange={(event) => setNewTaskContent(event.target.value)} placeholder="Conteúdo da task..." className="mb-2 w-full rounded-lg border border-[#eadfdb] bg-white px-2 py-2 text-xs outline-none focus:border-[#b40000]" /><button onClick={submitTask} className="w-full rounded-lg bg-[#b40000] py-2 text-xs font-semibold text-white hover:bg-[#930000]">Nova tarefa</button></div>}
+    <Droppable droppableId={String(column.id)}>{(provided, snapshot) => <div ref={provided.innerRef} {...provided.droppableProps} className={`flex min-h-[170px] flex-1 flex-col gap-3 overflow-y-auto p-3 transition ${snapshot.isDraggingOver ? "bg-[#fff1ed]" : ""}`}>{column.tasks.map((task, index) => <Task key={task.id} task={task} index={index} editTask={editTask} editTaskContent={editTaskContent} deleteTask={deleteTask} columnId={column.id} />)}{provided.placeholder}</div>}</Droppable>
+  </section>
+}
+
+export default function Page() {
+  const [columns, setColumns] = useState<ColumnData[]>(initialColumns)
+  const [activeView, setActiveView] = useState("Quadro")
+
+  const addTask = (columnId: string | number, title: string, content: string) => { if (!title.trim() && !content.trim()) return; const newTask = { id: Date.now(), title, content, completed: false, color: "black" }; setColumns((previous) => previous.map((column) => column.id === columnId ? { ...column, tasks: [...column.tasks, newTask] } : column)) }
+  const addColumn = () => setColumns((previous) => [...previous, { id: Date.now().toString(), title: "", tasks: [] }])
+  const editColumnTitle = (id: string | number, title: string) => setColumns((previous) => previous.map((column) => column.id === id ? { ...column, title } : column))
+  const editTask = (id: number, title: string, columnId: string | number) => setColumns((previous) => previous.map((column) => column.id === columnId ? { ...column, tasks: column.tasks.map((task) => task.id === id ? { ...task, title } : task) } : column))
+  const deleteTask = (id: number, columnId: string | number) => setColumns((previous) => previous.map((column) => column.id === columnId ? { ...column, tasks: column.tasks.filter((task) => task.id !== id) } : column))
+  const editTaskContent = (id: number, content: string, columnId: string | number) => setColumns((previous) => previous.map((column) => column.id === columnId ? { ...column, tasks: column.tasks.map((task) => task.id === id ? { ...task, content } : task) } : column))
+  const handleDragEnd = ({ source, destination }: DropResult) => { if (!destination) return; if (source.droppableId === destination.droppableId) { setColumns((previous) => previous.map((column) => { if (String(column.id) !== source.droppableId) return column; const tasks = Array.from(column.tasks); const [moved] = tasks.splice(source.index, 1); tasks.splice(destination.index, 0, moved); return { ...column, tasks } })) } else { setColumns((previous) => { const next = previous.map((column) => ({ ...column, tasks: [...column.tasks] })); const sourceColumn = next.find((column) => String(column.id) === source.droppableId); const destinationColumn = next.find((column) => String(column.id) === destination.droppableId); if (!sourceColumn || !destinationColumn) return previous; const [moved] = sourceColumn.tasks.splice(source.index, 1); destinationColumn.tasks.splice(destination.index, 0, moved); return next }) } }
+
+  return <main className="min-h-screen bg-[#f8f7f5] text-[#241d1d]"><header className="sticky top-0 z-20 border-b border-[#eadfdb] bg-[#fffdfb]/95 backdrop-blur"><div className="mx-auto flex h-16 max-w-[1500px] items-center justify-between px-5 lg:px-8"><div className="flex items-center gap-3"><div className="flex size-9 items-center justify-center rounded-xl bg-[#b40000] text-xl font-black italic text-white">B</div><span className="hidden text-sm font-extrabold tracking-[0.28em] text-[#4c1717] sm:block">BETTER MANAGER</span></div><div className="flex items-center gap-2 text-[#776d6a]"><button aria-label="Ajuda" className="rounded-lg p-2 hover:bg-[#f4eae7]"><CircleHelp /></button><button aria-label="Notificações" className="rounded-lg p-2 hover:bg-[#f4eae7]"><Bell /></button><button className="flex items-center gap-2 rounded-full border border-[#eadfdb] bg-white px-2 py-1.5"><span className="flex size-7 items-center justify-center rounded-full bg-[#f4c8bd] text-xs font-bold text-[#7d1b15]">GC</span><span className="hidden font-medium sm:block">Giovanna</span><ChevronDown className="size-4" /></button></div></div></header><div className="mx-auto flex max-w-[1500px]"><aside className="hidden w-64 shrink-0 border-r border-[#eadfdb] px-4 py-7 lg:block"><div className="mb-8 px-3"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#b40000]">Seu espaço</p><h1 className="mt-2 text-2xl font-semibold tracking-tight">Workspace</h1></div><nav className="flex flex-col gap-1">{[["Quadro", LayoutGrid], ["Minhas tarefas", ListTodo], ["Objetivos", Target], ["Equipe", Users]].map(([label, Icon]) => <button key={label as string} onClick={() => setActiveView(label as string)} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium ${activeView === label ? "bg-[#b40000] text-white" : "text-[#716764] hover:bg-[#f4eae7]"}`}><Icon className="size-4" />{label as string}</button>)}</nav><div className="mt-10 border-t border-[#eadfdb] pt-6"><button className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-[#716764] hover:bg-[#f4eae7]"><Settings2 className="size-4" />Configurações</button></div><div className="mt-8 rounded-2xl bg-[#2c2020] p-4 text-white"><Sparkles className="mb-5 size-5 text-[#ffafa0]" /><p className="text-sm font-semibold">Feito para avançar.</p><p className="mt-1 text-xs leading-5 text-[#d8c9c5]">Transforme planos em movimento, um passo de cada vez.</p></div></aside><section className="min-w-0 flex-1 px-5 py-7 lg:px-8"><div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#b40000]"><span className="size-2 rounded-full bg-[#ee8b78]" />Acesso exclusivo</div><h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Progresso do time.</h2><p className="mt-2 max-w-xl text-sm text-[#847976]">Sua lógica manual continua aqui: edite, crie, exclua e arraste tarefas entre colunas.</p></div><div className="flex gap-2"><button className="flex items-center gap-2 rounded-xl border border-[#eadfdb] bg-white px-3 py-2 text-sm font-medium text-[#655b58]"><Filter className="size-4" />Filtrar</button><button onClick={addColumn} className="flex items-center gap-2 rounded-xl bg-[#b40000] px-4 py-2 text-sm font-semibold text-white hover:bg-[#930000]"><Plus className="size-4" />Nova coluna</button></div></div><div className="mb-5 flex items-center justify-between border-b border-[#eadfdb] pb-3"><div className="flex items-center gap-5 text-sm"><button className="border-b-2 border-[#b40000] pb-3 font-semibold text-[#b40000]">Quadro</button><button className="pb-3 text-[#887b77]">Timeline</button></div><button aria-label="Pesquisar" className="rounded-lg p-2 text-[#887b77] hover:bg-[#f4eae7]"><Search className="size-4" /></button></div><DragDropContext onDragEnd={handleDragEnd}><div className="flex gap-4 overflow-x-auto pb-6">{columns.map((column) => <Column key={column.id} column={column} editTask={editTask} addTask={addTask} editTaskContent={editTaskContent} deleteTask={deleteTask} editColumnTitle={editColumnTitle} />)}</div></DragDropContext></section></div></main>
+}

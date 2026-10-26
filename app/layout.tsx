@@ -1,9 +1,10 @@
+import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Better Manager | Seu próximo nível começa aqui',
-  description: 'Uma experiência criada para quem transforma ideias em movimento.',
+  title: 'Better Manager — Workspace',
+  description: 'Organize ideias, acompanhe o progresso e avance com seu time.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -41,6 +42,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className="antialiased">
         {children}
+        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )
